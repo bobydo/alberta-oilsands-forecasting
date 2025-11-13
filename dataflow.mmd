@@ -1,0 +1,10 @@
+```mermaid
+sequenceDiagram
+U->>S53: Upload ST53 XLS
+S53->>M53: Clean & window
+M53->>API: Save model
+U->>S39: Upload ST39 XLS
+S39->>M39: Clean & window
+M39->>API: Save model
+C->>API: Predict
+```

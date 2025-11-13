@@ -1,0 +1,9 @@
+```mermaid
+flowchart TD
+A[ST53 XLS] --> B[ST53 Preprocessing]
+C[ST39 XLS] --> D[ST39 Preprocessing]
+B --> E[ST53 LSTM Model]
+D --> F[ST39 LSTM Model]
+E --> G[FastAPI /sagd/predict]
+F --> H[FastAPI /mining/predict]
+```
