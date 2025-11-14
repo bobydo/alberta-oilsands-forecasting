@@ -1,7 +1,14 @@
 from fastapi import APIRouter
 from src.st39.inference_st39 import load_st39_model, predict_st39
-model,window=load_st39_model("models")
+from api.schemas import PredictionRequest, PredictionResponse
+
 router=APIRouter()
-@router.post("/predict")
-def mining_predict(values:list):
-    return {"prediction":predict_st39(model,window,values)}
+model=None
+window=None
+
+@router.post("/predict", response_model=PredictionResponse)
+def mining_predict(request: PredictionRequest):
+    global model, window
+    if model is None:
+        model, window = load_st39_model("models")
+    return {"prediction":predict_st39(model,window,request.values)}

@@ -1,7 +1,14 @@
 from fastapi import APIRouter
 from src.st53.inference_st53 import load_st53_model, predict_st53
-model,window=load_st53_model("models")
+from api.schemas import PredictionRequest, PredictionResponse
+
 router=APIRouter()
-@router.post("/predict")
-def sagd_predict(values:list):
-    return {"prediction":predict_st53(model,window,values)}
+model=None
+window=None
+
+@router.post("/predict", response_model=PredictionResponse)
+def sagd_predict(request: PredictionRequest):
+    global model, window
+    if model is None:
+        model, window = load_st53_model("models")
+    return {"prediction":predict_st53(model,window,request.values)}

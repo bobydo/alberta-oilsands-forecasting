@@ -1,8 +1,11 @@
 tensorflow
+keras
 pandas
 joblib
 fastapi
 uvicorn
+python-multipart
 openpyxl
+xlrd
 matplotlib
 scikit-learn
