@@ -1,6 +1,7 @@
 import sys
 import numpy as np
 import joblib
+from sklearn.preprocessing import MinMaxScaler
 from src.st53.preprocess_st53 import ST53DataProcessor
 from src.st53.model_st53 import ST53Model
 from src.common.window import WindowGenerator
@@ -34,8 +35,16 @@ class ST53Trainer:
                 self.logger.error(error_msg)
                 raise ValueError(error_msg)
             
-            # Create windowed sequences
-            X, y = WindowGenerator.create(values, self.window_size)
+            # CRITICAL: Scale data to 0-1 range for neural network training
+            # Problem: Without scaling, model was trained on raw values (8,000-40,000 m³)
+            # This caused API predictions to be completely wrong (73 m³ instead of ~8,000 m³)
+            # Neural networks learn best when input data is normalized to similar ranges
+            scaler = MinMaxScaler(feature_range=(0, 1))
+            values_scaled = scaler.fit_transform(values.reshape(-1, 1)).flatten()
+            self.logger.info(f"Scaled data from range [{values.min():.2f}, {values.max():.2f}] to [0, 1]")
+            
+            # Create windowed sequences from SCALED data
+            X, y = WindowGenerator.create(values_scaled, self.window_size)
             # reshapes the data into the 3D format required by LSTM neural networks. (445, 8, 1)
             # -1: "Auto-calculate this dimension" - Python figures out it should be 445 based on the total array size
             # self.window_size (8): Number of time steps in each sequence (8 months of historical data)
@@ -51,17 +60,21 @@ class ST53Trainer:
             # Build and train model
             model = ST53Model.build(self.window_size)
             self.logger.info("Starting model training...")
+            #Complete Training Flow training = 40 epochs × 56 batches/epoch = 2,240 weight updates
             model.fit(X, y, epochs=self.epochs, batch_size=self.batch_size)
             self.logger.info("Model training completed")
             
-            # Save model and metadata
+            # Save model, scaler, and metadata
             os.makedirs(output_dir, exist_ok=True)
             model_file = f"{output_dir}/st53_model.keras"
+            scaler_file = f"{output_dir}/st53_scaler.pkl"
             meta_file = f"{output_dir}/st53_meta.pkl"
             
             model.save(model_file)
+            joblib.dump(scaler, scaler_file)  # Save scaler for inference
             joblib.dump({"window": self.window_size}, meta_file)
             self.logger.info(f"Model saved to {model_file}")
+            self.logger.info(f"Scaler saved to {scaler_file}")
             self.logger.info(f"Metadata saved to {meta_file}")
             
         except FileNotFoundError as e:

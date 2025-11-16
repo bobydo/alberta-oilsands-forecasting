@@ -4,12 +4,12 @@ from typing import List
 
 class PredictionRequest(BaseModel):
     """Request body for production prediction."""
-    values: List[float] = Field(..., description="Recent production values (window_size length)", min_length=6, max_length=6)
+    values: List[float] = Field(..., description="Recent production values (window_size length)", min_length=8, max_length=8)
     
     class Config:
         json_schema_extra = {
             "example": {
-                "values": [1500.0, 1550.0, 1600.0, 1650.0, 1700.0, 1750.0]
+                "values": [95000.0, 98000.0, 97500.0, 99000.0, 101000.0, 100500.0, 102000.0, 103500.0]
             }
         }
 

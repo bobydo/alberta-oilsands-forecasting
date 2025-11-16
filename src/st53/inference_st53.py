@@ -21,10 +21,15 @@ class ST53Predictor:
                 raise FileNotFoundError(error_msg)
             
             model_file = f"{model_path}/st53_model.keras"
+            scaler_file = f"{model_path}/st53_scaler.pkl"
             meta_file = f"{model_path}/st53_meta.pkl"
             
             if not os.path.exists(model_file):
                 error_msg = f"Model file not found: {model_file}"
+                self.logger.error(error_msg)
+                raise FileNotFoundError(error_msg)
+            if not os.path.exists(scaler_file):
+                error_msg = f"Scaler file not found: {scaler_file}"
                 self.logger.error(error_msg)
                 raise FileNotFoundError(error_msg)
             if not os.path.exists(meta_file):
@@ -33,6 +38,7 @@ class ST53Predictor:
                 raise FileNotFoundError(error_msg)
             
             self.model: Any = keras.models.load_model(model_file)
+            self.scaler = joblib.load(scaler_file)  # Load scaler for data normalization
             meta = joblib.load(meta_file)
             
             if "window" not in meta:
@@ -42,6 +48,7 @@ class ST53Predictor:
             
             self.window_size = meta["window"]
             self.logger.info(f"Model loaded successfully with window_size={self.window_size}")
+            self.logger.info(f"Scaler loaded successfully")
             
         except FileNotFoundError as e:
             self.logger.error(f"Model loading error: {e}")
@@ -65,11 +72,29 @@ class ST53Predictor:
                 self.logger.error(error_msg)
                 raise TypeError(error_msg)
             
-            arr = np.array(values).reshape(1, self.window_size, 1)
-            prediction = self.model.predict(arr, verbose=0)
-            result = float(prediction[0][0])
+            # CRITICAL FIX: Scale input data before prediction
+            # API Problem: User sent [8232, 8086, 7690, 8227, 8423, 8405, 8477, 7892] (Cenovus Sunrise data)
+            # Without scaling: Model predicted 73.39 m³ (completely wrong!)
+            # Root cause: Model was trained on scaled data (0-1), but API sent raw data (8000+)
+            # Solution: Scale input → predict → inverse-scale output
             
-            self.logger.info(f"Prediction successful: {result}")
+            # Step 1: Scale input values from raw (e.g., 8000 m³) to 0-1 range
+            # Why Scale to [0, 1] for Neural Networks? => Gradient descent steps: fewer for larger steps, training faster
+            values_array = np.array(values).reshape(-1, 1)
+            values_scaled = self.scaler.transform(values_array).flatten()
+            self.logger.info(f"Scaled input from range [{min(values):.2f}, {max(values):.2f}] to [0, 1]")
+            
+            # Step 2: Reshape for LSTM input: (1 batch, 8 timesteps, 1 feature)
+            arr = values_scaled.reshape(1, self.window_size, 1)
+            
+            # Step 3: Get prediction (will be in scaled 0-1 range)
+            prediction_scaled = self.model.predict(arr, verbose=0)
+            
+            # Step 4: Inverse-scale prediction back to original range (e.g., 8000 m³)
+            prediction_original = self.scaler.inverse_transform(prediction_scaled)[0][0]
+            result = float(prediction_original)
+            
+            self.logger.info(f"Prediction successful: {result:.2f} m³")
             return result
             
         except ValueError as e:
