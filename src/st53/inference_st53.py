@@ -1,14 +1,14 @@
 import numpy as np
 import joblib
 import keras
-from typing import List
+from typing import List, Any
 
 class ST53Predictor:
     """Loads trained ST53 model and makes predictions."""
     
     def __init__(self, model_path: str):
         """Load model and metadata from disk. Args: model_path: Directory containing model files."""
-        self.model = keras.models.load_model(f"{model_path}/st53_model.keras")
+        self.model: Any = keras.models.load_model(f"{model_path}/st53_model.keras")
         self.window_size = joblib.load(f"{model_path}/st53_meta.pkl")["window"]
     
     def predict(self, values: List[float]) -> float:

@@ -1,14 +1,15 @@
 import numpy as np
 import joblib
 import keras
-from typing import List
+from typing import List, cast
+from keras.models import Model
 
 class ST39Predictor:
     """Loads trained ST39 model and makes predictions."""
-    
     def __init__(self, model_path: str):
         """Load model and metadata from disk. Args: model_path: Directory containing model files."""
-        self.model = keras.models.load_model(f"{model_path}/st39_model.keras")
+        self.model: Model = cast(Model, keras.models.load_model(f"{model_path}/st39_model.keras"))
+        self.window_size = joblib.load(f"{model_path}/st39_meta.pkl")["window"]
         self.window_size = joblib.load(f"{model_path}/st39_meta.pkl")["window"]
     
     def predict(self, values: List[float]) -> float:

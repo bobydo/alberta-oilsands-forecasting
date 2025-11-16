@@ -3,12 +3,13 @@ import numpy as np
 import joblib
 from src.st53.preprocess_st53 import ST53DataProcessor
 from src.st53.model_st53 import ST53Model
-from src.common.window import create_windows
+from src.common.window import WindowGenerator
 
 class ST53Trainer:
     """Trains LSTM model on ST53 bitumen production data."""
-    
-    def __init__(self, window_size: int = 6, epochs: int = 40, batch_size: int = 16):
+    # From python -m tuning.tune_st53
+    # ✓ Best: window=8, epochs=40, batch=8 (MAE=7757.21, RMSE=13733.49)
+    def __init__(self, window_size: int = 8, epochs: int = 40, batch_size: int = 8):
         """Initialize trainer with hyperparameters. Args: window_size: Number of time steps for input sequence, epochs: Training iterations, batch_size: Samples per gradient update."""
         self.window_size = window_size
         self.epochs = epochs
@@ -21,7 +22,7 @@ class ST53Trainer:
         values = np.array(df["Bitumen"].astype(float).values)
         
         # Create windowed sequences
-        X, y = create_windows(values, self.window_size)
+        X, y = WindowGenerator.create(values, self.window_size)
         X = X.reshape((-1, self.window_size, 1))
         
         # Build and train model

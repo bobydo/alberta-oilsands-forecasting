@@ -12,6 +12,3 @@ class WindowGenerator:
             X.append(values[i:i + window_size])
             y.append(values[i + window_size])
         return np.array(X), np.array(y)
-
-# Keep this for compatibility with training scripts
-create_windows = WindowGenerator.create

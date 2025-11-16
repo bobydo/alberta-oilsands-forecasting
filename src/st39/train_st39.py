@@ -2,7 +2,7 @@ import sys
 import joblib
 from src.st39.preprocess_st39 import ST39DataProcessor
 from src.st39.model_st39 import ST39Model
-from src.common.window import create_windows
+from src.common.window import WindowGenerator
 
 class ST39Trainer:
     """Trains LSTM model on ST39 mining production data."""
@@ -20,7 +20,7 @@ class ST39Trainer:
         values = df["Production"].astype(float).to_numpy()
         
         # Create windowed sequences
-        X, y = create_windows(values, self.window_size)
+        X, y = WindowGenerator.create(values, self.window_size)
         X = X.reshape((-1, self.window_size, 1))
         
         # Build and train model
