@@ -9,3 +9,5 @@ openpyxl
 xlrd
 matplotlib
 scikit-learn
+pydot
+graphviz
