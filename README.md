@@ -15,8 +15,10 @@
   - *Test Coverage*: Model architecture, predictions, data processing, integration, edge cases
   
 - **AI Integration**: Deployed local LLM (Ollama) to generate natural language business insights for Cenovus Christina Lake/Foster Creek operations, plus FastAPI endpoints for real-time predictions
-  - *Example Analysis*: "Suncor Firebag: 8-month trend +1,566 m³ (increasing) → Next month prediction 31,784 m³ → Verdict: **REMAIN STABLE**"
+  - *Christina Lake:* The Christina Lake production trend is currently declining (-1217.14). The model's prediction for next month is 33719.36, indicating a downward trend.
   - *Business Insight*: "Monitor Firebag production closely - prediction aligns with current performance levels"
+
+![Project Architecture](docs/images/Project_Diagram.png)
 
 ## 📊 Project Overview
 
