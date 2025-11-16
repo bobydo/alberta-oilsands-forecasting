@@ -19,8 +19,8 @@ class FileLogger:
         # Remove existing handlers to avoid duplicates
         logger.handlers = []
         
-        # File handler
-        file_handler = logging.FileHandler(log_file, mode='a')
+        # File handler (UTF-8 encoding to support emoji characters like ✅, ⚠️, ❌)
+        file_handler = logging.FileHandler(log_file, mode='a', encoding='utf-8')
         file_handler.setLevel(logging.INFO)
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         file_handler.setFormatter(formatter)

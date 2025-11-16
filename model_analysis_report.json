@@ -1,0 +1,84 @@
+{
+  "test_results": {
+    "model_info": {
+      "window_size": 8,
+      "scaler_min": 8791.24,
+      "scaler_max": 40922.27
+    },
+    "tests": [
+      {
+        "name": "Cenovus Christina Lake",
+        "description": "Largest Cenovus SAGD operation (~37,000-41,000 m\u00b3/month)",
+        "input": [
+          38440.48,
+          38453.59,
+          38345.22,
+          23973.98,
+          40922.27,
+          40339.68,
+          38701.56,
+          37223.34
+        ],
+        "input_average": 37050.01,
+        "input_trend": -1217.14,
+        "last_value": 37223.34,
+        "prediction": 33719.36,
+        "expected_range": [
+          25000,
+          45000
+        ],
+        "in_expected_range": true,
+        "deviation_from_avg": -3330.66
+      },
+      {
+        "name": "Cenovus Foster Creek",
+        "description": "Large consistent operation (~30,000-32,000 m\u00b3/month)",
+        "input": [
+          30717.12,
+          32122.67,
+          30897.38,
+          30137.87,
+          29907.24,
+          31504.45,
+          30909.04,
+          30768.31
+        ],
+        "input_average": 30870.51,
+        "input_trend": 51.19,
+        "last_value": 30768.31,
+        "prediction": 29729.82,
+        "expected_range": [
+          25000,
+          35000
+        ],
+        "in_expected_range": true,
+        "deviation_from_avg": -1140.69
+      },
+      {
+        "name": "Suncor Firebag",
+        "description": "Major Suncor operation (~35,000-38,000 m\u00b3/month)",
+        "input": [
+          35622.35,
+          36088.92,
+          35891.63,
+          36188.79,
+          36895.32,
+          37678.31,
+          38245.55,
+          37188.41
+        ],
+        "input_average": 36724.91,
+        "input_trend": 1566.06,
+        "last_value": 37188.41,
+        "prediction": 31783.84,
+        "expected_range": [
+          30000,
+          42000
+        ],
+        "in_expected_range": true,
+        "deviation_from_avg": -4941.07
+      }
+    ]
+  },
+  "llm_analysis": "**Reports for Operations Managers \u2013 SAGD Operations**\n\n**Overall Production Trend Analysis**\n\n*   **Christina Lake:** Current production trend: -1217.14. Model\u2019s prediction for next month: 33719.36. Verdict: Production expected to go Down.\n*   **Foster Creek:** Current production trend: 51.19. Model\u2019s prediction for next month: 29729.82. Verdict: Production expected to go Down.\n*   **Suncor Firebag:** Current production trend: 1566.06. Model\u2019s prediction for next month: 37188.41. Verdict: Production expected to go Up.\n\n**Detailed Site Analysis**\n\n*   **Christina Lake:** The Christina Lake production trend is currently declining (-1217.14). The model\u2019s prediction for next month is 33719.36, indicating a downward trend.\n*   **Foster Creek:** The Foster Creek production trend is currently consistent at 51.19. The model\u2019s prediction for next month is 29729.82, suggesting a stable production rate.\n*   **Suncor Firebag:** The Suncor Firebag production trend is currently increasing at 1566.06. The model\u2019s prediction for next month is 37188.41, indicating an upward trend.\n\n**Recommendations**\n\nOperations teams should prioritize monitoring the Christina Lake production trend, as it is currently declining.  The model\u2019s prediction for next month is significantly lower than the 8-month average, suggesting a potential slowdown in production.  Furthermore, the Suncor Firebag is exhibiting a positive trend, warranting focused attention to ensure continued production capacity.\n\n"
+}

@@ -45,9 +45,11 @@ class ST53Model:
                 
                 # Output layer: Single prediction value
                 # - Dense(1): Fully connected layer that combines all 32 LSTM outputs → 1 value
-                # - No activation: Linear output for regression (predicting continuous production values)
-                # - Purpose: Final forecast for next month's bitumen production
-                keras.layers.Dense(1)
+                # - Sigmoid activation: Constrains output to [0, 1] range (matches scaled training data)
+                # - Why sigmoid? Training data is scaled to [0, 1], so predictions must also be [0, 1]
+                # - Problem solved: Without activation, model could output negative (e.g., -0.0187 → -763 m³)
+                # - Purpose: Final forecast for next month's bitumen production (scaled, then inverse-transformed)
+                keras.layers.Dense(1, activation='sigmoid')
             ])
             # Why Adam?
             # Combines best features of other optimizers (momentum + adaptive learning rates)

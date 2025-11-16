@@ -87,12 +87,21 @@ class ST53Predictor:
             # Step 2: Reshape for LSTM input: (1 batch, 8 timesteps, 1 feature)
             arr = values_scaled.reshape(1, self.window_size, 1)
             
-            # Step 3: Get prediction (will be in scaled 0-1 range)
+            # Step 3: Get prediction (should be in scaled 0-1 range, but model can output negative)
             prediction_scaled = self.model.predict(arr, verbose=0)
             
             # Step 4: Inverse-scale prediction back to original range (e.g., 8000 m³)
             prediction_original = self.scaler.inverse_transform(prediction_scaled)[0][0]
-            result = float(prediction_original)
+            
+            # CRITICAL FIX: Clip negative predictions to zero
+            # Problem: LSTM output layer has no activation constraint, can predict negative values
+            # Example: Foster Creek input → model outputs -0.0187 (scaled) → -763 m³ (unscaled)
+            # Root cause: Dense(1) layer with no activation can output any real number
+            # Solution: Clip to 0 minimum (can't have negative bitumen production!)
+            result = float(max(0.0, prediction_original))
+            
+            if prediction_original < 0:
+                self.logger.warning(f"Model predicted negative value {prediction_original:.2f}, clipped to 0.0")
             
             self.logger.info(f"Prediction successful: {result:.2f} m³")
             return result
