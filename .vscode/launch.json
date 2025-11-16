@@ -1,0 +1,57 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "name": "Train ST53 Model",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "src.st53.train_st53",
+            "args": [
+                "data/st53/ST53_2024-12.xls",
+                "models/"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Train ST39 Model",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "src.st39.train_st39",
+            "args": [
+                "data/st39/ST39-2024.xls",
+                "models/"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Run FastAPI Server",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "api.main:app",
+                "--host",
+                "0.0.0.0",
+                "--port",
+                "8080",
+                "--reload"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Python: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}

@@ -2,13 +2,13 @@
 
 A unified machine learning system for forecasting Alberta oil sands production using real AER datasets:
 
-- **ST53** – Cenovus In-Situ (SAGD) Bitumen Production  
+- **ST53** – Cenovus In-Situ (SAGD - Steam-Assisted Gravity Drainage) Bitumen Production  
 - **ST39** – Mineable Oil Sands Plant Production  
 
 This repository includes:
 
 - Full preprocessing pipelines  
-- TensorFlow LSTM forecasting models  
+- TensorFlow LSTM (Long Short-Term Memory) forecasting models  
 - Production-grade FastAPI inference service  
 - Dockerized deployment  
 - CI/CD automation  
@@ -39,9 +39,9 @@ requirements.txt
 ```
 
 ## 🔧 Training
-```
-python src/st53/train_st53.py data/ST53_2024-12.xls models/
-python src/st39/train_st39.py data/ST39-2024.xls models/
+```bash
+python -m src.st53.train_st53 data/st53/ST53_2024-12.xls models/
+python -m src.st39.train_st39 data/st39/ST39-2024.xls models/
 ```
 
 ## 🌐 API Endpoints
