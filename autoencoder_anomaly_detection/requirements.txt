@@ -1,0 +1,22 @@
+# Autoencoder Anomaly Detection Requirements
+# Python 3.9+
+
+# Deep Learning Framework
+tensorflow>=2.15.0
+keras>=3.0.0
+
+# Data Processing
+numpy>=1.24.0,<2.0.0
+pandas>=2.0.0
+
+# Machine Learning Utilities
+scikit-learn>=1.3.0
+
+# Visualization
+matplotlib>=3.7.0
+
+# Optional: For GPU support (uncomment if needed)
+# tensorflow[and-cuda]>=2.15.0
+
+# Optional: For progress bars
+# tqdm>=4.65.0
